@@ -1,0 +1,503 @@
+account
+---------------------
+package com.cg.banking.beans;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+public class Account {
+	private int accountNo;
+	private int pinNumber;
+	private String accountType,accountStatus;
+	private float accountBalance;
+	private HashMap<Long,Transaction> transactions=new HashMap<Long, Transaction>();
+	public Account() {}
+	public Account(int accountNo, int pinNumber, String accountType, String accountStatus, float accountBalance,
+			HashMap<Long,Transaction> transactions) {
+		super();
+		this.accountNo = accountNo;
+		this.pinNumber = pinNumber;
+		this.accountType = accountType;
+		this.accountStatus = accountStatus;
+		this.accountBalance = accountBalance;
+		this.transactions = transactions;
+	}
+	public Account(String accountType, float initBalance) {
+		this.accountType=accountType;
+		this.accountBalance=initBalance;
+	}
+	public int getAccountNo() {
+		return accountNo;
+	}
+	public void setAccountNo(int accountNo) {
+		this.accountNo = accountNo;
+	}
+	public int getPinNumber() {
+		return pinNumber;
+	}
+	public void setPinNumber(int pinNumber) {
+		this.pinNumber = pinNumber;
+	}
+	public String getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	public String getAccountStatus() {
+		return accountStatus;
+	}
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+	public float getAccountBalance() {
+		return accountBalance;
+	}
+	public void setAccountBalance(float accountBalance) {
+		this.accountBalance = accountBalance;
+	}
+	public HashMap<Long, Transaction> getTransactions() {
+		return transactions;
+	}
+	public void setTransactions(HashMap<Long, Transaction> transactions) {
+		this.transactions = transactions;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(accountBalance);
+		result = prime * result + (int) (accountNo ^ (accountNo >>> 32));
+		result = prime * result + ((accountStatus == null) ? 0 : accountStatus.hashCode());
+		result = prime * result + ((accountType == null) ? 0 : accountType.hashCode());
+		result = prime * result + pinNumber;
+		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (Float.floatToIntBits(accountBalance) != Float.floatToIntBits(other.accountBalance))
+			return false;
+		if (accountNo != other.accountNo)
+			return false;
+		if (accountStatus == null) {
+			if (other.accountStatus != null)
+				return false;
+		} else if (!accountStatus.equals(other.accountStatus))
+			return false;
+		if (accountType == null) {
+			if (other.accountType != null)
+				return false;
+		} else if (!accountType.equals(other.accountType))
+			return false;
+		if (pinNumber != other.pinNumber)
+			return false;
+		if (transactions == null) {
+			if (other.transactions != null)
+				return false;
+		} else if (!transactions.equals(other.transactions))
+			return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return "Account [accountNo=" + accountNo + ", pinNumber=" + pinNumber + ", accountType=" + accountType
+				+ ", accountStatus=" + accountStatus + ", accountBalance=" + accountBalance + ", transactions="
+				+ transactions + "]";
+	}
+}
+
+
+transaction
+-----------------
+
+package com.cg.banking.beans;
+public class Transaction {
+	private int transactionId;
+	private float amount;
+	private String transactionType;
+	public Transaction() {	}
+	public Transaction( float amount, String transactionType) {
+		super();
+		this.amount = amount;
+		this.transactionType = transactionType;
+	}
+	public Transaction(int transactionId, float amount, String transactionType) {
+		super();
+		this.transactionId = transactionId;
+		this.amount = amount;
+		this.transactionType = transactionType;
+	}
+	public int getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+	public float getAmount() {
+		return amount;
+	}
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+	public String getTransactionType() {
+		return transactionType;
+	}
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(amount);
+		result = prime * result + transactionId;
+		result = prime * result + ((transactionType == null) ? 0 : transactionType.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		if (Float.floatToIntBits(amount) != Float.floatToIntBits(other.amount))
+			return false;
+		if (transactionId != other.transactionId)
+			return false;
+		if (transactionType == null) {
+			if (other.transactionType != null)
+				return false;
+		} else if (!transactionType.equals(other.transactionType))
+			return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		return "Transaction [transactionId=" + transactionId + ", amount=" + amount + ", transactionType="
+				+ transactionType + "]";
+	}
+}
+
+
+mainclass
+-----------------
+
+package com.cg.banking.client;
+import java.util.Scanner;
+import com.cg.banking.beans.Account;
+import com.cg.banking.services.BankingServices;
+import com.cg.banking.services.BankingServicesImpl;
+public class MainClass {
+	public static void main(String[] args) {
+		int accountNumber;
+		int pinNumber;
+		int amount;
+		BankingServices bankingService =new BankingServicesImpl();
+		Account account1=null;
+		Account account2=null;
+		account1=bankingService.openAccount("Savings", 2000);
+		account1.setAccountStatus("Active");
+		account2=bankingService.openAccount("Savings", 9000);
+		account2.setAccountStatus("Active");
+		System.out.println("Account Details:\n "+account1);
+		System.out.println("Account Details:\n "+account2);
+		Scanner sc=new Scanner(System.in);
+		System.out.println("*********WITHDRAW***************");
+		System.out.println("Enter account number from which amount is to be withdrawn: ");
+		accountNumber=sc.nextInt();
+		System.out.println("Enter pin number: ");
+		pinNumber=sc.nextInt();
+		System.out.println("Enter amount to be withdrawn:");
+		amount=sc.nextInt();
+		bankingService.withdrawAmount(accountNumber, amount, pinNumber);
+		System.out.println("Account details after withdrawal: "+bankingService.getAccountDetails(accountNumber));
+		System.out.println("**********DEPOSIT***************");
+		System.out.println("Enter account number from which amount is to be deposited: ");
+		accountNumber=sc.nextInt();
+		System.out.println("Enter amount to be deposited:");
+		amount=sc.nextInt();
+		bankingService.depositAmount(accountNumber, amount);
+		System.out.println("Account details after depositing: "+bankingService.getAccountDetails(accountNumber));
+		System.out.println("**********FUND_TRANSFER**********");
+		System.out.println("Enter the account number from which money will be transferrred: ");
+		int accountNoFrom=sc.nextInt();
+		System.out.println("Enter the Pin Number: ");
+		pinNumber=sc.nextInt();
+		System.out.println("Enter the account number where money will be transferred: ");
+		int accountNoTo=sc.nextInt();
+		System.out.println("Enter amount: ");
+		float transferAmount=sc.nextInt();
+		boolean b=bankingService.fundTransfer(accountNoTo, accountNoFrom, transferAmount, pinNumber);
+		if(b) {
+			System.out.println("Account Status of Depositor:\n"+bankingService.getAccountDetails(accountNoFrom));
+			System.out.println("Account Status of Reciever:\n"+bankingService.getAccountDetails(accountNoTo));
+		}
+	}
+}
+
+AccountDAO
+-----------------
+
+package com.cg.banking.daoservices;
+import java.util.List;
+import com.cg.banking.beans.Account;
+public interface AccountDAO {
+	Account save(Account account);
+	boolean update(Account account);
+	Account findOne(int accountNo);
+	List<Account> findAll();
+}
+
+
+AccountDAOimpl
+-----------------
+
+package com.cg.banking.daoservices;
+import java.util.ArrayList;
+import java.util.List;
+import com.cg.banking.beans.Account;
+import com.cg.banking.util.BankingDBUtil;
+public class AccountDAOImpl implements AccountDAO {
+	@Override
+	public Account save(Account account) {
+		account.setAccountNo(BankingDBUtil.getACCOUNT_NUMBER());
+		account.setPinNumber(BankingDBUtil.getPIN_NUMBER());
+		BankingDBUtil.customer.put(account.getAccountNo(), account);
+		return account;
+	}
+	@Override
+	public boolean update(Account account) {
+		if(BankingDBUtil.customer.containsKey(account.getAccountNo())) {
+			BankingDBUtil.customer.put(account.getAccountNo(), account);
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public Account findOne(int accountNo) {
+		return BankingDBUtil.customer.get(accountNo);
+	}
+	@Override
+	public List<Account> findAll() {
+		return new ArrayList<>(BankingDBUtil.customer.values());
+	}
+}
+
+TransactionDAO
+--------------------
+
+package com.cg.banking.daoservices;
+import java.util.List;
+import com.cg.banking.beans.Transaction;
+public interface TransactionDAO {
+	Transaction save(int accountNumber, Transaction transaction);
+	Transaction findOne(int accountNumber, int transactionId);
+	List<Transaction> findAll(int accountNumber);
+}
+
+
+TransactionDAOImpl
+--------------------
+
+package com.cg.banking.daoservices;
+import java.util.ArrayList;
+import java.util.List;
+import com.cg.banking.beans.Transaction;
+import com.cg.banking.util.BankingDBUtil;
+public class TransactionDAOImpl implements TransactionDAO{
+	@Override
+	public Transaction save(int accountNumber, Transaction transaction) {
+		transaction.setTransactionId(BankingDBUtil.getTRANSACTION_NUMBER());
+		BankingDBUtil.customer.get(accountNumber).getTransactions().put((long)transaction.getTransactionId(),transaction);
+		return transaction;
+	}
+	@Override
+	public Transaction findOne(int accountNumber, int transactionId) {
+		return BankingDBUtil.customer.get(accountNumber).getTransactions().get(transactionId);
+	}
+	@Override
+	public List<Transaction> findAll(int accountNumber) {
+		return new ArrayList<Transaction>(BankingDBUtil.customer.get(accountNumber).getTransactions().values());
+	}
+}
+
+
+bankingServices
+------------------
+
+package com.cg.banking.services;
+import java.util.List;
+import java.util.Map;
+import com.cg.banking.beans.Account;
+import com.cg.banking.beans.Transaction;
+import com.cg.banking.exceptions.AccountBlockedException;
+import com.cg.banking.exceptions.AccountNotFoundException;
+import com.cg.banking.exceptions.BankingServicesDownException;
+import com.cg.banking.exceptions.InsufficientAmountException;
+import com.cg.banking.exceptions.InvalidAccountTypeException;
+import com.cg.banking.exceptions.InvalidAmountException;
+import com.cg.banking.exceptions.InvalidPinNumberException;
+
+public interface BankingServices {
+	Account openAccount(String accountType,float initBalance)
+		throws InvalidAmountException,InvalidAccountTypeException,BankingServicesDownException;
+	
+	float depositAmount(int accountNumber,float amount)
+		throws AccountNotFoundException,BankingServicesDownException,AccountBlockedException;
+	
+	float withdrawAmount(int accountNumber,float amount,int pinNumber)
+		throws InsufficientAmountException,AccountNotFoundException,InvalidPinNumberException,
+		BankingServicesDownException,AccountBlockedException;
+	
+	boolean fundTransfer(int accountNoTo,int accountNoFrom,float transferAmount,int pinNumber)
+		throws InsufficientAmountException,AccountNotFoundException,InvalidPinNumberException,
+		BankingServicesDownException,AccountBlockedException;
+	
+	Account getAccountDetails(int accountNo)
+		throws AccountNotFoundException,BankingServicesDownException;
+	
+	List<Account> getAllAccountDetails()
+		throws BankingServicesDownException;
+	
+	Map<Long, Transaction> getAccountAllTransaction(long accountNo)
+		throws BankingServicesDownException,AccountNotFoundException;
+	
+	public String accountStatus(int accountNo)
+		throws BankingServicesDownException,AccountNotFoundException,AccountBlockedException;
+}
+
+
+bankingServicesImpl
+--------------------
+
+package com.cg.banking.services;
+import java.util.List;
+import java.util.Map;
+import com.cg.banking.beans.Account;
+import com.cg.banking.beans.Transaction;
+import com.cg.banking.daoservices.AccountDAO;
+import com.cg.banking.daoservices.AccountDAOImpl;
+import com.cg.banking.daoservices.TransactionDAO;
+import com.cg.banking.daoservices.TransactionDAOImpl;
+import com.cg.banking.exceptions.AccountBlockedException;
+import com.cg.banking.exceptions.AccountNotFoundException;
+import com.cg.banking.exceptions.BankingServicesDownException;
+import com.cg.banking.exceptions.InsufficientAmountException;
+import com.cg.banking.exceptions.InvalidAccountTypeException;
+import com.cg.banking.exceptions.InvalidAmountException;
+import com.cg.banking.exceptions.InvalidPinNumberException;
+public class BankingServicesImpl implements BankingServices{
+	private AccountDAO accountDao=new AccountDAOImpl();
+	private TransactionDAO transactionDao=new TransactionDAOImpl();
+	@Override
+	public Account openAccount(String accountType, float initBalance)
+			throws InvalidAmountException, InvalidAccountTypeException, BankingServicesDownException {
+		Account account=new Account(accountType,initBalance);
+		account=accountDao.save(account);
+		return account;
+	}
+	@Override
+	public float depositAmount(int accountNumber, float amount)
+			throws AccountNotFoundException, BankingServicesDownException, AccountBlockedException {
+		Account account=getAccountDetails(accountNumber);
+		if(account.getAccountStatus().equalsIgnoreCase("Blocked"))
+			throw new AccountBlockedException();
+		else
+			account.setAccountBalance(account.getAccountBalance()+amount);
+		transactionDao.save( accountNumber, new Transaction(amount,"Deposit"));
+		return account.getAccountBalance();
+	}
+	@Override
+	public float withdrawAmount(int accountNumber, float amount, int pinNumber) throws InsufficientAmountException,
+			AccountNotFoundException, InvalidPinNumberException, BankingServicesDownException, AccountBlockedException {
+		Account account=getAccountDetails(accountNumber);
+		if(account.getAccountStatus().equalsIgnoreCase("Blocked"))
+			throw new AccountBlockedException();
+		else if(account.getPinNumber()!=pinNumber)
+			throw new InvalidPinNumberException();
+		else if(account.getAccountBalance()-amount<500)
+			throw new InsufficientAmountException();
+		else
+			account.setAccountBalance(account.getAccountBalance()-amount);
+		transactionDao.save((int) accountNumber, new Transaction(amount,"Withdraw"));
+		return account.getAccountBalance();
+	}
+
+	@Override
+	public boolean fundTransfer(int accountNoTo, int accountNoFrom, float transferAmount, int pinNumber)
+			throws InsufficientAmountException, AccountNotFoundException, InvalidPinNumberException,
+			BankingServicesDownException, AccountBlockedException {
+		Account customerNoTo=getAccountDetails(accountNoTo);
+		Account customerNoFrom=getAccountDetails(accountNoFrom);
+		if(customerNoTo.getAccountStatus().equalsIgnoreCase("Blocked") || customerNoFrom.getAccountStatus().equalsIgnoreCase("Blocked"))
+			throw new AccountBlockedException();
+		else if(customerNoFrom.getPinNumber()!=pinNumber)
+			throw new InvalidPinNumberException();
+		else if(customerNoFrom.getAccountBalance()-transferAmount<500)
+			throw new InsufficientAmountException();
+		else {
+			customerNoTo.setAccountBalance(customerNoTo.getAccountBalance()+transferAmount);
+			transactionDao.save(customerNoTo.getAccountNo(), new Transaction(transferAmount,"Deposit"));
+			customerNoFrom.setAccountBalance(customerNoFrom.getAccountBalance()-transferAmount);
+			transactionDao.save(customerNoFrom.getAccountNo(), new Transaction(transferAmount,"Withdraw"));
+		}
+		return true;
+	}
+	@Override
+	public Account getAccountDetails(int accountNo) throws AccountNotFoundException, BankingServicesDownException {
+		Account account=accountDao.findOne(accountNo);
+		if(account==null)
+			throw new AccountNotFoundException();
+		return account;
+	}
+
+	@Override
+	public List<Account> getAllAccountDetails() throws BankingServicesDownException {
+		return accountDao.findAll();
+	}
+	@Override
+	public Map<Long,Transaction> getAccountAllTransaction(long accountNo)
+			throws BankingServicesDownException, AccountNotFoundException {
+		return null;
+	}
+	@Override
+	public String accountStatus(int accountNumber)
+			throws BankingServicesDownException, AccountNotFoundException, AccountBlockedException {
+		Account account=getAccountDetails(accountNumber);
+		if(account.getAccountStatus().equalsIgnoreCase("Blocked"))
+			throw new AccountBlockedException();
+		else
+			return "Active";
+	}
+}
+
+BankingDBUtil
+----------------
+
+package com.cg.banking.util;
+import java.util.HashMap;
+import com.cg.banking.beans.Account;
+public class BankingDBUtil {
+	public static HashMap<Integer,Account> customer=new HashMap<>();
+	private static int ACCOUNT_NUMBER=5000;
+	private static int TRANSACTION_NUMBER=100;
+	public static int getACCOUNT_NUMBER() {
+		return ++ACCOUNT_NUMBER;
+	}
+	public static int getTRANSACTION_NUMBER() {
+		return ++TRANSACTION_NUMBER;
+	}
+	public static int getPIN_NUMBER() {
+		return (int) (Math.random()*10000);
+	}
+}
